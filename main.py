@@ -1,26 +1,27 @@
 from Klasifikator import Classifier
 from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
 
 IrisData = load_iris(as_frame=True)
 
 X = IrisData.data
 y = IrisData.target
 
-knn = Classifier(7, 'euclidean')
+knn = Classifier(8, 'manhattan') # manhattan euclidean
 
-knn.fit(X, y)
+X_train, X_test, y_train, y_test = train_test_split(IrisData.data, IrisData.target, test_size=0.2) # random_state=42
 
-predict = knn.predict(X)
+knn.fit(X_train, y_train)
 
-correct_predictions = 0
+# knn.visualize_instance(133) # 133
 
-for i, predicted, actual in zip(range(len(predict)), predict, y):
-    print(f'Predicted: {predicted}, is really: {actual}')
+predict = knn.predict(X_test)
 
-    if predicted == actual:
-        correct_predictions += 1
+knn.accuracy(predict, y)
 
-accuracy = (correct_predictions / len(predict)) * 100
-print(f'\nAccuracy: {accuracy:.2f}%')
+knn.k_fold_cross_validation(X, y, 10)
 
-#knn.visualize_instance(133)
+knn.write_to_csv()
+
+
+
