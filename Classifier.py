@@ -86,8 +86,6 @@ class Classifier:
         self.accuracy_row = accuracy
         self.avg_accuracy = average_accuracy
 
-
-
     def accuracy(self, predict, y):
         correct_predictions = 0
 
@@ -126,9 +124,9 @@ class Classifier:
     def write_to_csv(self):
         filename = ''
         if self.distance_metric == 'euclidean':
-            filename = 'Euclidean.csv'
+            filename = 'Euclidean_standardized.csv'
         elif self.distance_metric == 'manhattan':
-            filename = 'Manhattan.csv'
+            filename = 'Manhattan_standardized.csv'
 
         with open(filename, 'a', newline='') as csvfile:
             fieldnames = ['Fold', 'NumNeighbors', 'DistanceMetric', 'Accuracy', 'AverageAccuracy']
@@ -146,6 +144,12 @@ class Classifier:
             writer.writerow({})
 
             print('Data appended to the file successfully')
+
+    def min_max_normalize(self, feature):
+        min_val = feature.min()
+        max_val = feature.max()
+        normalized_feature = (feature - min_val) / (max_val - min_val)
+        return normalized_feature
 
 
 
